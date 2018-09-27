@@ -42,6 +42,9 @@ wqry_status_external <- tbl(dpd_remote, "wqry_status_external")
 wqry_tc_for_atc <- tbl(dpd_remote, "wqry_tc_for_atc")
 wqry_pharmaceutical_std <- tbl(dpd_remote, "wqry_pharmaceutical_std")
 
+
+drug_product <- tbl(dpd_current, "drug_product")
+schedule <- tbl(dpd_current, "schedule")
 pm <- tbl(dpd_current, "product_monographs")
 
 pm_max <- pm %>% 
@@ -207,3 +210,21 @@ product_monographs <- wqry_pm_drug %>%
          everything(),
          -external_status_code,
          -external_status_english)
+
+
+dhpr_subset <- drug_product %>%
+                left_join(schedule, by = "drug_code") %>%
+                left_join(pm, by = "drug_code") %>%
+                mutate(otc_w_pm = case_when(!schedule == "OTC" ~ TRUE,
+                                            !is.na(pm_english_fname) & !is.na(pm_french_fname) ~ TRUE,
+                                            TRUE ~ FALSE)) %>%
+                filter(class == "Human", extract == "active", otc_w_pm == TRUE)
+  
+  
+  
+  
+  
+  
+  
+  
+  
