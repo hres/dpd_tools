@@ -80,11 +80,11 @@ insert into dpd_api.dpd_json
 			'descriptor', NULLIF(descriptor, ''),
 			'number_of_ais', number_of_ais,
 			'ai_group_no', ai_group_no,
-                        'class_f', class_f,
-                         'descriptor_f', descriptor_f,
-                         'brand_name_f', brand_name_f,
-                         'risk_man_plan', risk_man_plan,
-                         'last_refresh', last_refresh,
+      'class_f', class_f,
+      'descriptor_f', NULLIF(descriptor_f, ''),
+      'brand_name_f', brand_name_f,
+      'risk_man_plan', risk_man_plan,
+      'last_refresh', last_refresh,
 			'company', (
 			  SELECT TO_JSONB(c)
 			  FROM (
@@ -112,6 +112,12 @@ insert into dpd_api.dpd_json
 			                                  where drug_code = drug.drug_code
 			                                  group by drug_code
 			                                  ) ais),
+			'active_ingredients_f', (select to_jsonb(ais_f.ingredient_f)
+			                            from (select drug_code, array_agg(distinct(ingredient_f)) as ingredient_f
+			                                  from dpd_api.active_ingredient
+			                                  where drug_code = drug.drug_code
+			                                  group by drug_code
+			                                  ) ais_f),
 			'active_ingredients_detail', (
 				SELECT JSONB_AGG(TO_JSONB(ai))
 				FROM (
@@ -129,26 +135,42 @@ insert into dpd_api.dpd_json
 					WHERE drug_code = drug.drug_code
 					) ai),
 				'dosage_form', (
-				  SELECT TO_JSONB(ARRAY_AGG(DISTINCT pharmaceutical_form))
+				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(pharmaceutical_form))
+				  FROM dpd_api.pharmaceutical_form
+				  WHERE drug_code = drug.drug_code
+				    ),
+				'route_f', (
+				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(route_of_administration_f))
+				  FROM dpd_api.route
+				  WHERE drug_code = drug.drug_code
+				  ),
+				  'dosage_form_f', (
+				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(pharmaceutical_form_f))
 				  FROM dpd_api.pharmaceutical_form
 				  WHERE drug_code = drug.drug_code
 				    ),
 				'route', (
-				  SELECT TO_JSONB(ARRAY_AGG(DISTINCT route_of_administration))
+				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(route_of_administration))
 				  FROM dpd_api.route
 				  WHERE drug_code = drug.drug_code
 				  ),
 				'schedule', (
-				  SELECT TO_JSONB(ARRAY_AGG(DISTINCT schedule))
+				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(schedule))
+				  FROM dpd_api.schedule
+				    WHERE drug_code = drug.drug_code
+				  ),
+				  'schedule_f', (
+				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(schedule_f))
 				  FROM dpd_api.schedule
 				    WHERE drug_code = drug.drug_code
 				  ),
 				'pharmaceutical_std', (
-				  SELECT TO_JSONB(ARRAY_AGG(DISTINCT pharmaceutical_std))
+				  SELECT COALESCE(jsonb_AGG(distinct to_jsonb(pharmaceutical_std)) FILTER (WHERE NOT (pharmaceutical_std = 'null')),
+                                                    null)
 				  FROM dpd_api.pharmaceutical_std
 				    WHERE drug_code = drug.drug_code
-				  ),
-				   'pm_date', (
+				  ), 
+				  'pm_date', (
 				  SELECT pm_date
 				  FROM (
 				      SELECT "drug_code", 
@@ -209,7 +231,8 @@ insert into dpd_api.dpd_json
 				    WHERE drug_code = drug.drug_code
 				  ),
 				'packaging', (
-				  SELECT JSONB_AGG(TO_JSONB(pa))
+				  SELECT coalesce(JSONB_AGG(TO_JSONB(pa)) FILTER (WHERE pa IS NOT NULL),
+                                                  null)
 				  FROM (
 					  SELECT
 					    NULLIF(upc, '') as upc,
@@ -222,6 +245,12 @@ insert into dpd_api.dpd_json
 				    ) pa),
 				'status_current', (select to_jsonb(s.status)
 			                            from (select drug_code, status
+			                                  from dpd_api.status
+			                                  where drug_code = drug.drug_code AND current_status_flag = 'Y'
+			                                  
+			                                  ) s),
+			   'status_current_f', (select to_jsonb(s.status_f)
+			                            from (select drug_code, status_f
 			                                  from dpd_api.status
 			                                  where drug_code = drug.drug_code AND current_status_flag = 'Y'
 			                                  
