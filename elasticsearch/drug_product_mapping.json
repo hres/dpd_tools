@@ -6,9 +6,33 @@
   "mappings": {
       "drug_product": {
         "properties": {
+          "Health_Canada_identifier": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "Health_Canada_product_name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
           "active_ingredients": {
-            "type": "text"
-            },
+            "type": "text",
+            "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+          },
           "active_ingredients_detail": {
             "type": "nested",
             "properties": {
@@ -71,6 +95,15 @@
                     "ignore_above": 256
                   }
                 }
+              }
+            }
+          },
+          "active_ingredients_f": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
               }
             }
           },
@@ -231,6 +264,15 @@
               }
             }
           },
+          "dosage_form_f": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
           "drug_code": {
             "type": "long"
           },
@@ -242,6 +284,27 @@
           },
           "last_refresh": {
             "type": "date"
+          },
+          "mp_code": {
+            "type": "long"
+          },
+          "mp_formal_name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "mp_status": {
+            "type": "keyword"
+          },
+          "mp_status_effective_time": {
+            "type": "date"
+          },
+          "mp_type": {
+            "type": "keyword"
           },
           "number_of_ais": {
             "type": "long"
@@ -287,43 +350,19 @@
             }
           },
           "pharmaceutical_std": {
-            "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
-              }
-            }
+            "type": "keyword"
           },
           "pm_date": {
             "type": "date"
           },
           "product_monograph_en_url": {
-            "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
-              }
-            }
+            "type": "keyword"
           },
           "product_monograph_fr_url": {
-            "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
-              }
-            }
+            "type": "keyword"
           },
           "risk_man_plan": {
-            "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
-              }
-            }
+            "type": "keyword"
           },
           "route": {
             "type": "text",
@@ -334,7 +373,25 @@
               }
             }
           },
+          "route_f": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
           "schedule": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "schedule_f": {
             "type": "text",
             "fields": {
               "keyword": {
@@ -353,13 +410,10 @@
             "type": "date"
           },
           "status_current": {
-            "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
-              }
-            }
+            "type": "keyword"
+          },
+          "status_current_f": {
+            "type": "keyword"
           },
           "status_detail": {
             "properties": {
