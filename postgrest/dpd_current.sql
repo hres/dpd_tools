@@ -159,7 +159,7 @@ CREATE MATERIALIZED VIEW dpd_current.product_monographs AS (
         NOW() as "last_refresh"
   FROM remote.wqry_pm_drug);
   
-CREATE MATERIALIZED VIEW dpd_current.special_identifer AS (
+CREATE MATERIALIZED VIEW dpd_current.special_identifier AS (
   SELECT "id",
         "drug_code",
         "si_code",
