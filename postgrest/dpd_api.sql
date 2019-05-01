@@ -10,6 +10,7 @@ ALTER TABLE dpd_api.active_ingredient ADD PRIMARY KEY (active_ingredient_id);
 ALTER TABLE dpd_api.active_ingredient ADD CONSTRAINT active_ingredient_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
 CREATE TABLE dpd_api.companies AS (SELECT * FROM dpd_current.companies);
+DELETE FROM dpd_api.companies WHERE "company_code" = '17052' AND "street_name" IS NULL;
 ALTER TABLE dpd_api.companies ADD PRIMARY KEY (drug_code, company_code);
 ALTER TABLE dpd_api.companies ADD CONSTRAINT companies_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
@@ -40,6 +41,9 @@ ALTER TABLE dpd_api.therapeutic_class ADD CONSTRAINT ther_drug_code_fkey FOREIGN
 CREATE TABLE dpd_api.vet_species AS (SELECT * FROM dpd_current.vet_species);
 ALTER TABLE dpd_api.vet_species ADD CONSTRAINT vet_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
+CREATE TABLE dpd_api.special_identifier AS (SELECT * FROM dpd_current.special_identifier);
+ALTER TABLE dpd_api.special_identifier ADD CONSTRAINT sp_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
+
 CREATE INDEX companies_drug_code ON dpd_api.companies USING btree (drug_code);
 CREATE INDEX packaging_drug_code ON dpd_api.packaging USING btree (drug_code);
 CREATE INDEX pharmaceutical_form_drug_code ON dpd_api.pharmaceutical_form USING btree (drug_code);
@@ -54,6 +58,7 @@ CREATE INDEX vet_drug_code ON dpd_api.vet_species USING btree (drug_code);
 CREATE INDEX product_monograph_drug_code ON dpd_api.product_monographs USING btree (drug_code);
 CREATE INDEX product_monograph_pm_fname_eng ON dpd_api.product_monographs USING btree (pm_english_fname);
 CREATE INDEX product_monograph_pm_fname_fr ON dpd_api.product_monographs USING btree (pm_french_fname);
+CREATE INDEX sp_drug_code ON dpd_api.special_identifier USING btree (drug_code);
 
 
 -- dpd_json
@@ -340,6 +345,8 @@ CREATE TABLE dpd_api.dpd_lookup AS (
    FROM dpd_api.drug_product
     JOIN dpd_api.companies USING (drug_code)
     JOIN dpd_api.active_ingredient USING (drug_code));
+
+CREATE VIEW dpd_api.route_values
 
 -- Constraints
 

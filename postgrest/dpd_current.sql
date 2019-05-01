@@ -159,6 +159,16 @@ CREATE MATERIALIZED VIEW dpd_current.product_monographs AS (
         NOW() as "last_refresh"
   FROM remote.wqry_pm_drug);
   
+CREATE MATERIALIZED VIEW dpd_current.special_identifer AS (
+  SELECT "id",
+        "drug_code",
+        "si_code",
+        "desc_e",
+        "desc_f",
+        "date_assigned",
+        NOW() as "last_refresh"
+  FROM remote.wqry_special_identifier);
+  
 CREATE INDEX companies_drug_code ON dpd_current.companies USING btree (drug_code);
 CREATE INDEX packaging_drug_code ON dpd_current.packaging USING btree (drug_code);
 CREATE INDEX pharmaceutical_form_drug_code ON dpd_current.form USING btree (drug_code);
@@ -169,6 +179,12 @@ CREATE INDEX active_ingredient_drug_code ON dpd_current.active_ingredients USING
 CREATE INDEX therapeutic_class_drug_code ON dpd_current.therapeutic_class USING btree (drug_code);
 CREATE INDEX route_drug_code ON dpd_current.route USING btree (drug_code);
 CREATE INDEX vet_drug_code ON dpd_current.vet_species USING btree (drug_code);
+CREATE INDEX sp_id ON dpd_current.special_identifier USING btree (id);
+CREATE INDEX sp_drug_code ON dpd_current.special_identifier USING btree (drug_code);
+
+
+
+
 
 GRANT USAGE ON SCHEMA dpd_current TO dpd_reader;
 GRANT SELECT ON ALL TABLES IN SCHEMA dpd_current TO dpd_reader;

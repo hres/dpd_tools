@@ -11,7 +11,7 @@
 CREATE EXTENSION oracle_fdw;
 CREATE SERVER [replace_with_an_alias] FOREIGN DATA WRAPPER oracle_fdw OPTIONS (dbserver '[replace_with_oracle_host]:1521/[repalce_with_oracle_database_name]');
 GRANT USAGE ON FOREIGN [replace_with_an_alias] TO dpd_owner;
-CREATE USER MAPPING FOR PUBLIC SERVER [replace_with_an_alias] (user '[replace_with_real_oracle_user]', password '[replace_with_real_password]');
+CREATE USER MAPPING FOR PUBLIC SERVER [replace_with_an_alias] OPTIONS (user '[replace_with_real_oracle_user]', password '[replace_with_real_password]');
 CREATE SCHEMA remote;
 IMPORT FOREIGN SCHEMA "[replace_with_oracle_namespace]" FROM SERVER [replace_with_an_alias] INTO remote options(case 'lower', readonly 'true');
 

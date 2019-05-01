@@ -14,6 +14,7 @@ create table dpd_previous.schedule as select * from dpd_current.schedule;
 create table dpd_previous.status as select * from dpd_current.status;
 create table dpd_previous.therapeutic_class as select * from dpd_current.therapeutic_class;
 create table dpd_previous.vet_species as select * from dpd_current.vet_species;
+create table dpd_previous.special_identifier as select * from dpd_current.special_identifier;
 
 
 refresh materialized view dpd_current.active_ingredients;
@@ -28,6 +29,7 @@ refresh materialized view dpd_current.schedule;
 refresh materialized view dpd_current.status;
 refresh materialized view dpd_current.therapeutic_class;
 refresh materialized view dpd_current.vet_species;
+refresh materialized view dpd_current.special_identifier;
 
 truncate dpd_api.drug_product cascade;
 insert into dpd_api.drug_product (SELECT * FROM dpd_current.drug_product);
@@ -64,6 +66,8 @@ insert into dpd_api.therapeutic_class (SELECT * FROM dpd_current.therapeutic_cla
 
 
 insert into dpd_api.vet_species (SELECT * FROM dpd_current.vet_species);
+
+insert into dpd_api.special_identifier (SELECT * dpd_current.special_identifier);
 
 truncate dpd_api.dpd_json;
 insert into dpd_api.dpd_json   
