@@ -346,7 +346,6 @@ CREATE TABLE dpd_api.dpd_lookup AS (
     JOIN dpd_api.companies USING (drug_code)
     JOIN dpd_api.active_ingredient USING (drug_code));
 
-CREATE VIEW dpd_api.route_values
 
 -- Constraints
 
