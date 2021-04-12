@@ -54,7 +54,7 @@ insert into dpd_api.pharmaceutical_form SELECT a.* FROM dpd_current.form a
 JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
 
-
+truncate dpd_api.pharmaceutical_std;
 insert into dpd_api.pharmaceutical_std SELECT a.* FROM dpd_current.pharmaceutical_std a
 JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
@@ -89,6 +89,7 @@ insert into dpd_api.vet_species SELECT a.* FROM dpd_current.vet_species a
 JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
 
+truncate dpd_api.special_identifier;
 insert into dpd_api.special_identifier SELECT a.* dpd_current.special_identifier a
 JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
