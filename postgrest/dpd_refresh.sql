@@ -90,7 +90,7 @@ JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
 
 truncate dpd_api.special_identifier;
-insert into dpd_api.special_identifier SELECT a.* dpd_current.special_identifier a
+insert into dpd_api.special_identifier SELECT a.* FROM dpd_current.special_identifier a
 JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
 
