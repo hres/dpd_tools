@@ -35,39 +35,63 @@ truncate dpd_api.drug_product cascade;
 insert into dpd_api.drug_product (SELECT * FROM dpd_current.drug_product);
 
 
-insert into dpd_api.active_ingredient (SELECT * FROM dpd_current.active_ingredients);
+insert into dpd_api.active_ingredient SELECT a.* FROM dpd_current.active_ingredients a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.companies (SELECT * FROM dpd_current.companies);
+insert into dpd_api.companies SELECT a.* FROM dpd_current.companies a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.packaging (SELECT * FROM dpd_current.packaging);
+insert into dpd_api.packaging SELECT a.* FROM dpd_current.packaging a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.pharmaceutical_form (SELECT * FROM dpd_current.form);
+insert into dpd_api.pharmaceutical_form SELECT a.* FROM dpd_current.form a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.pharmaceutical_std (SELECT * FROM dpd_current.pharmaceutical_std);
+insert into dpd_api.pharmaceutical_std SELECT a.* FROM dpd_current.pharmaceutical_std a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.product_monographs (SELECT * FROM dpd_current.product_monographs);
+insert into dpd_api.product_monographs SELECT a.* FROM dpd_current.product_monographs a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.route (SELECT * FROM dpd_current.route);
+insert into dpd_api.route SELECT a.* FROM dpd_current.route a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.schedule (SELECT * FROM dpd_current.schedule);
+insert into dpd_api.schedule SELECT a.* FROM dpd_current.schedule a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.status (SELECT * FROM dpd_current.status);
+insert into dpd_api.status SELECT a.* FROM dpd_current.status a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.therapeutic_class (SELECT * FROM dpd_current.therapeutic_class);
+insert into dpd_api.therapeutic_class SELECT a.* FROM dpd_current.therapeutic_class a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 
-insert into dpd_api.vet_species (SELECT * FROM dpd_current.vet_species);
+insert into dpd_api.vet_species SELECT a.* FROM dpd_current.vet_species a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
-insert into dpd_api.special_identifier (SELECT * dpd_current.special_identifier);
+insert into dpd_api.special_identifier SELECT a.* dpd_current.special_identifier a
+JOIN dpd_api.drug_product b using (drug_code)
+on conflict do nothing;
 
 truncate dpd_api.dpd_json;
 insert into dpd_api.dpd_json   

@@ -2,7 +2,8 @@
 -- Connection details drawn from environment variables PGUSER, PGPASSWORD, PGHOST, PGDATABASE
 
 LOAD ARCHIVE
- FROM https://www.canada.ca/content/dam/hc-sc/documents/services/drug-product-database/allfiles.zip
+-- FROM https://www.canada.ca/content/dam/hc-sc/documents/services/drug-product-database/Allfiles.zip
+FROM /home/dbuijs/dpd/allfiles.zip
 
   INTO postgresql:///dpd
   
