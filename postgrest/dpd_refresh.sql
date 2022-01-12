@@ -371,10 +371,13 @@ insert into dpd_api.dpd_lookup (
         drug_product.drug_identification_number,
         drug_product.brand_name,
         companies.company_name,
-        active_ingredient.ingredient
+        active_ingredient.ingredient,
+        status.status,
+        status.status_f
    FROM dpd_api.drug_product
     JOIN dpd_api.companies USING (drug_code)
-    JOIN dpd_api.active_ingredient USING (drug_code));
+    JOIN dpd_api.active_ingredient USING (drug_code)
+    JOIN dpd_api.status USING (drug_code));
 
 do $$ begin execute format('alter schema dpd_previous rename to "dpd_live_%s"',now()::date); end; $$;
 insert into dpd_current.update_history default values;
