@@ -343,10 +343,13 @@ CREATE TABLE dpd_api.dpd_lookup AS (
         drug_product.drug_identification_number,
         drug_product.brand_name,
         companies.company_name,
-        active_ingredient.ingredient
+        active_ingredient.ingredient,
+        status.status,
+        status.status_f
    FROM dpd_api.drug_product
     JOIN dpd_api.companies USING (drug_code)
-    JOIN dpd_api.active_ingredient USING (drug_code));
+    JOIN dpd_api.active_ingredient USING (drug_code)
+    JOIN dpd_api.status USING (drug_code));
 
 
 -- Constraints
@@ -358,6 +361,8 @@ CREATE INDEX dpd_lookup_drug_identification_number ON dpd_api.dpd_lookup USING b
 CREATE INDEX dpd_lookup_brand_name ON dpd_api.dpd_lookup USING btree (brand_name);
 CREATE INDEX dpd_lookup_company_name ON dpd_api.dpd_lookup USING btree (company_name);
 CREATE INDEX dpd_lookup_ingredient ON dpd_api.dpd_lookup USING btree (ingredient);
+CREATE INDEX dpd_lookup_status ON dpd_api.dpd_lookup USING btree (status);
+CREATE INDEX dpd_lookup_status_f ON dpd_api.dpd_lookup USING btree (status_f);
 
 GRANT USAGE ON SCHEMA dpd_api TO anon;
 GRANT USAGE ON SCHEMA dpd_api to dpd_reader;
