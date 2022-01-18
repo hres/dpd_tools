@@ -43,7 +43,7 @@ CREATE TABLE dpd_api.vet_species AS (SELECT * FROM dpd_current.vet_species);
 ALTER TABLE dpd_api.vet_species ADD CONSTRAINT vet_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
 CREATE TABLE dpd_api.special_identifier AS (SELECT * FROM dpd_current.special_identifier);
--- ALTER TABLE dpd_api.special_identifier ADD CONSTRAINT sp_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
+ALTER TABLE dpd_api.special_identifier ADD CONSTRAINT sp_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
 CREATE INDEX companies_drug_code ON dpd_api.companies USING btree (drug_code);
 CREATE INDEX packaging_drug_code ON dpd_api.packaging USING btree (drug_code);
