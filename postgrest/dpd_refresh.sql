@@ -40,8 +40,10 @@ JOIN dpd_api.drug_product b using (drug_code)
 on conflict do nothing;
 
 
-insert into dpd_api.companies SELECT a.* FROM dpd_current.companies a
+insert into dpd_api.companies select distinct on (drug_code, company_code) a.*
+from dpd_current.companies a
 JOIN dpd_api.drug_product b using (drug_code)
+order by drug_code, company_code, city_name nulls last 
 on conflict do nothing;
 
 

@@ -9,9 +9,11 @@ CREATE TABLE dpd_api.active_ingredient AS (SELECT * FROM dpd_current.active_ingr
 ALTER TABLE dpd_api.active_ingredient ADD PRIMARY KEY (active_ingredient_id);
 ALTER TABLE dpd_api.active_ingredient ADD CONSTRAINT active_ingredient_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
-CREATE TABLE dpd_api.companies AS (SELECT * FROM dpd_current.companies);
-DELETE FROM dpd_api.companies WHERE "company_code" = '17052' AND "street_name" IS NULL;
-DELETE FROM dpd_api.companies WHERE "company_code" = '14412' AND "street_name" IS NULL;
+CREATE TABLE dpd_api.companies AS (select distinct on (drug_code, company_code) *
+from dpd_current.companies
+order by drug_code, company_code, city_name nulls last);
+-- DELETE FROM dpd_api.companies WHERE "company_code" = '17052' AND "street_name" IS NULL;
+-- DELETE FROM dpd_api.companies WHERE "company_code" = '14412' AND "street_name" IS NULL;
 ALTER TABLE dpd_api.companies ADD PRIMARY KEY (drug_code, company_code);
 ALTER TABLE dpd_api.companies ADD CONSTRAINT companies_drug_code_fkey FOREIGN KEY (drug_code) REFERENCES dpd_api.drug_product(drug_code) NOT DEFERRABLE;
 
