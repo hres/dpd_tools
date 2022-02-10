@@ -109,16 +109,32 @@ CREATE TABLE dpd_api.dpd_json AS
 					WHERE drug_code = drug.drug_code
 					) c),
 			'active_ingredients', (select to_jsonb(ais.ingredient)
-			                            from (select drug_code, array_agg(distinct(ingredient)) as ingredient
-			                                  from dpd_api.active_ingredient
-			                                  where drug_code = drug.drug_code
-			                                  group by drug_code
+			                            from (select drug_code, 
+			                            array_agg(ingredient) as ingredient, 
+			                            array_agg(ingredient_f) as ingredient_f
+                                  from (
+                                    select distinct on (drug_code, ingredient) drug_code, 
+                                    ingredient, 
+                                    ingredient_f
+                                    from dpd_api.active_ingredient
+                                    where drug_code = drug.drug_code
+                                    order by drug_code, ingredient
+                                ) i
+                                group by drug_code
 			                                  ) ais),
 			'active_ingredients_f', (select to_jsonb(ais_f.ingredient_f)
-			                            from (select drug_code, array_agg(distinct(ingredient_f)) as ingredient_f
-			                                  from dpd_api.active_ingredient
-			                                  where drug_code = drug.drug_code
-			                                  group by drug_code
+			                            from (select drug_code, 
+			                            array_agg(ingredient) as ingredient, 
+			                            array_agg(ingredient_f) as ingredient_f
+                                  from (
+                                    select distinct on (drug_code, ingredient) drug_code, 
+                                    ingredient, 
+                                    ingredient_f
+                                    from dpd_api.active_ingredient
+                                    where drug_code = drug.drug_code
+                                    order by drug_code, ingredient
+                                ) i
+                                group by drug_code
 			                                  ) ais_f),
 			'active_ingredients_detail', (
 				SELECT JSONB_AGG(TO_JSONB(ai))
@@ -135,6 +151,7 @@ CREATE TABLE dpd_api.dpd_json AS
                                                 strength_unit_f
 					FROM dpd_api.active_ingredient
 					WHERE drug_code = drug.drug_code
+					ORDER BY ingredient
 					) ai),
 				'dosage_form', (
 				  SELECT DISTINCT TO_JSONB(ARRAY_AGG(pharmaceutical_form))
