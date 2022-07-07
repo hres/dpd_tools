@@ -8,6 +8,15 @@ CREATE TABLE "update_history" (
   "update_date" timestamptz NOT NULL DEFAULT now()
 );
 
+
+CREATE TABLE dpd_current.dpd_history (date_updated timestamptz, table_name text, drug_code integer, row jsonb, status text);
+
+CREATE INDEX dpd_history_date_updated ON dpd_current.dpd_history USING btree(date_updated);
+CREATE INDEX dpd_history_table_name ON dpd_current.dpd_history USING btree(table_name);
+CREATE INDEX dpd_history_drug_code ON dpd_current.dpd_history USING btree(drug_code);
+CREATE INDEX dpd_history_status ON dpd_current.dpd_history USING btree(status);
+CREATE INDEX dpd_history_row ON dpd_current.dpd_history USING gin(row);
+
 CREATE MATERIALIZED VIEW dpd_current.drug_product AS (
   SELECT CASE
                   WHEN (se."external_status_english" = 'Marketed') THEN ('active')
@@ -168,6 +177,8 @@ CREATE MATERIALIZED VIEW dpd_current.special_identifier AS (
         "date_assigned",
         NOW() as "last_refresh"
   FROM remote.wqry_special_identifier);
+  
+
   
 CREATE INDEX companies_drug_code ON dpd_current.companies USING btree (drug_code);
 CREATE INDEX packaging_drug_code ON dpd_current.packaging USING btree (drug_code);

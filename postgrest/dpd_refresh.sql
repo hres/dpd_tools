@@ -15,6 +15,7 @@ create table dpd_previous.status as select * from dpd_current.status;
 create table dpd_previous.therapeutic_class as select * from dpd_current.therapeutic_class;
 create table dpd_previous.vet_species as select * from dpd_current.vet_species;
 create table dpd_previous.special_identifier as select * from dpd_current.special_identifier;
+create table dpd_previous.dpd_json as select * from dpd_api.dpd_json;
 
 
 refresh materialized view dpd_current.active_ingredients;
@@ -397,6 +398,12 @@ insert into dpd_api.dpd_lookup (
     JOIN dpd_api.companies USING (drug_code)
     JOIN dpd_api.active_ingredient USING (drug_code)
     JOIN dpd_api.status USING (drug_code));
+
+-- dpd_history
+
+
+SELECT dpd_update_history('dpd_current', 'dpd_previous');
+
 
 do $$ begin execute format('alter schema dpd_previous rename to "dpd_live_%s"',now()::date); end; $$;
 insert into dpd_current.update_history default values;
