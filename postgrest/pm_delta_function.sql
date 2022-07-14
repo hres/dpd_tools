@@ -27,6 +27,11 @@ RAISE NOTICE 'Updating DPD history table from schema % to schema %', old_schema,
                                   'vet_species']
     LOOP
       RAISE NOTICE 'Updating table %' , current_table;
+      CONTINUE WHEN (SELECT NOT EXISTS (
+   SELECT FROM pg_tables
+   WHERE  schemaname = old_schema
+   AND    tablename  = current_table
+   ));
       cte_new = format($sql$
           WITH new AS (SELECT last_refresh::timestamptz as date_updated, 
                %1$L::text as table_name,

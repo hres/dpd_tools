@@ -19,7 +19,7 @@ select array_agg(table_schema::text)
 into schema_array
 from 
 (select distinct table_schema from information_schema.tables
-where table_catalog = 'dpd' and table_schema like 'dpd_live_%' and right(table_schema, 10)::date < '2022-06-29' and right(table_schema, 10)::date > '2020-05-01'
+where table_catalog = 'dpd' and table_schema like 'dpd_live_%' and right(table_schema, 10)::date < '2019-06-01' and right(table_schema, 10)::date > '2018-09-01'
 order by table_schema desc) x ;
   FOR i in array_lower(schema_array, 1) .. (array_upper(schema_array, 1)-1)
     LOOP
