@@ -406,9 +406,9 @@ SELECT dpd_update_history('dpd_current', 'dpd_previous');
 
 -- dpd_temporal
 -- deletions
-BEGIN;
+
 UPDATE dpd_current.dpd_temporal t
-SET systime = tstzrange(lower(systime), date_updated, '(]')
+SET systime = tstzrange(lower(systime), date_updated, '[)')
 FROM (SELECT MAX(date_updated) as date_updated, table_name, drug_code, row, status
       FROM dpd_current.dpd_history
       WHERE status = 'Deleted'
@@ -418,17 +418,30 @@ AND t.drug_code = x.drug_code
 AND t.row = x.row
 AND upper(t.systime) = 'infinity'::timestamptz
 AND lower(t.systime) < x.date_updated;
---additions
+--additions for rows that already exist
 INSERT INTO dpd_current.dpd_temporal
 (SELECT table_name,
         drug_code,
         row,
-        tstzrange(date_updated, 'infinity'::timestamptz, '(]') as systime
+        tstzrange(date_updated, 'infinity'::timestamptz, '[)') as systime
  FROM dpd_current.dpd_history h
  inner join dpd_current.dpd_temporal t using (table_name, drug_code, row)
  WHERE status = 'Added'
  AND date_updated = upper(systime));
-COMMIT;
+ 
+ --additions for new rows
+INSERT INTO dpd_current.dpd_temporal
+(SELECT table_name,
+       drug_code,
+       row,
+       tstzrange(date_updated, 'infinity'::timestamptz, '[)') as systime
+FROM dpd_current.dpd_history h
+WHERE status = 'Added'
+AND NOT EXISTS (SELECT 1 FROM dpd_current.dpd_temporal t
+where h.table_name = t.table_name AND h.drug_code =t.drug_code AND h.row = t.row)
+);
+ 
+
 
 do $$ begin execute format('alter schema dpd_previous rename to "dpd_live_%s"',now()::date); end; $$;
 insert into dpd_current.update_history default values;
