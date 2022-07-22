@@ -371,7 +371,10 @@ CREATE TABLE dpd_api.dpd_lookup AS (
     JOIN dpd_api.active_ingredient USING (drug_code)
     JOIN dpd_api.status USING (drug_code));
 
+--dpd_history and dpd_temporal
 
+CREATE VIEW dpd_api.dpd_history as (select * from dpd_current.dpd_history);
+CREATE VIEW dpd_api.dpd_temporal as (sleect * from dpd_current.dpd_temporal);
 -- Constraints
 
 
