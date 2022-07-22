@@ -374,7 +374,7 @@ CREATE TABLE dpd_api.dpd_lookup AS (
 --dpd_history and dpd_temporal
 
 CREATE VIEW dpd_api.dpd_history as (select * from dpd_current.dpd_history);
-CREATE VIEW dpd_api.dpd_temporal as (sleect * from dpd_current.dpd_temporal);
+CREATE VIEW dpd_api.dpd_temporal as (select * from dpd_current.dpd_temporal);
 -- Constraints
 
 
